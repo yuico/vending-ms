@@ -1,0 +1,75 @@
+body {
+  margin: 50px;
+  font-family: arial;
+  color: #687A8F
+}
+#vanding {
+  background-color: #FFCE00;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+#vanding>div {
+  margin:10px;
+}
+button {
+  transition-duration: 0.4s;
+  background-color:#f44336;
+  border-radius: 3px;
+  height: 50px;
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+#coin {
+  margin:10px;
+}
+#coin>button:hover {
+  background-color:#30415D;
+}
+#coin>button {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size:16px;
+  background-color:#687A8F;
+}
+.disabledBtn {
+  background-color:#ddd;
+  cursor: not-allowed;
+}
+.disabled>button {
+  background-color:#ddd;
+  cursor: not-allowed;
+}
+#cancelBtn {
+  background-color:#F24C4E;
+}
+#cancelBtn:hover {
+  background-color:#700000;
+}
+#orderBtn {
+  background-color:#4668a7;
+  margin-left: 0px;
+}
+#orderBtn:hover {
+  background-color:#000b70;
+}
+#returnCurrencyBtn {
+  background-color:#4c9652;
+}
+#returnCurrencyBtn:hover {
+  background-color:#064d06;
+}
+#readInputsBtn {
+  background-color:#964c96;
+  margin-top: 15px;
+}
+#readInputsBtn:hover {
+  background-color:#4d0635;
+}

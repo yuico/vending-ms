@@ -1,0 +1,200 @@
+<html>
+<head>
+	<link rel="stylesheet" href="./styles.css">
+	<script type = "text/javascript" src = "./vendilator_lib.js"></script>
+	<title>Soylent Green product</title>
+	
+</head>
+<body>
+	<h1>Soylent Green product</h1>
+	<h5>Yui Kim _ nokdoo00@gmail.com</h5>
+	<div>
+		<div id="coin">
+			<button class="addMoneyBtn" value="0.25">25</button>
+			<button class="addMoneyBtn" value="0.1">10</button>
+			<button class="addMoneyBtn" value="0.05">5</button>
+		</div>
+		<h4> Current Money: $<span id="moneyCount">0.00</span></h4>
+		<h4> Order record: <span id="totalProduct"></span></h4>
+		<div id="vanding">
+			<div>
+				<button id="btn-A" class="btnName disabledBtn" value="0.50" disabled>A (50 cents)</button>
+				<button id="btn-B" class="btnName disabledBtn" value="0.75" disabled>B (75 cents)</button>
+				<button id="btn-C" class="btnName disabledBtn" value="1.00" disabled>C (1.00 dollar)</button>
+			</div>
+			<div id="productNum" class="disabled">
+				<button id="btn-1" class="btnName">1</button>
+				<button id="btn-2" class="btnName">2</button>
+				<button id="btn-3" class="btnName">3</button>
+				<button id="btn-4" class="btnName">4</button>
+			</div>
+		</div>
+		<button id="orderBtn">Order</button>
+		<button id="cancelBtn">Cancel</button>
+		<button id="returnCurrencyBtn">Return Currency</button><br/>
+		<button id="readInputsBtn">Read Inputs</button>
+	</div>
+	<script type = "text/javascript" >
+
+		var vending = true;
+		let input = []
+		let productName = ''
+
+		let moneyCount = 0.00; //money stored in the vending machine
+		let moneyOrder = 0.00; //money spent for ordering product
+
+		init(null, document);
+
+		//main event loop for vending machine
+		doc.getElementById("readInputsBtn").addEventListener("click", () => {
+			getInput();
+
+			if(inputCall < inputs.length) {
+				let value = inputs[inputCall-1].value;
+				let type = inputs[inputCall-1].type;
+				console.log(`type: ${type}`)
+				console.log(`value: ${value}`)
+				if(type == 'coin') {
+					moneyCount += +value;
+					removeDisabled(moneyCount)
+					doc.getElementById("moneyCount").innerHTML = moneyCount.toFixed(2);
+				}else {
+					if( value == 'A' || value == 'B' || value == 'C') {	
+						doc.getElementById(`btn-${value}`).click();
+					}else if( value == '1' || value == '2' || value == '3' || value == '4' ){
+						doc.getElementById(`btn-${value}`).click();
+					}else if(value == 'CANCEL') {
+						doc.getElementById("cancelBtn").click();
+					}else if(value == 'ORDER') {
+						doc.getElementById("orderBtn").click();
+					}else if(value == 'RETURN_CURRENCY') {
+						doc.getElementById("returnCurrencyBtn").click();
+					}
+				}	
+			}else { 
+				alert("No readable input.");	
+				doc.getElementById("readInputsBtn").classList.add("disabledBtn");
+				doc.getElementById("readInputsBtn").disabled = true;;
+			}
+		})
+
+		let addMoneyBtn = doc.querySelectorAll(".addMoneyBtn");
+		let checkValueOfBtn = doc.querySelectorAll(".btnName");
+
+		//function for adding money
+		addMoneyBtn.forEach(element => {
+			element.addEventListener("click", event => {
+				moneyCount += +event.target.value;
+				doc.getElementById("moneyCount").innerHTML = moneyCount.toFixed(2);
+				removeDisabled(Math.fround(moneyCount).toFixed(2));
+			})
+		});
+
+		//function for activating btn
+		function removeDisabled(money) { 
+			if(money>=0.50) {
+				doc.getElementById("btn-A").classList.remove("disabledBtn");
+				doc.getElementById("btn-A").disabled = false;
+				if(money>=0.75) { 
+					doc.getElementById("btn-B").classList.remove("disabledBtn");
+					doc.getElementById("btn-B").disabled = false;
+					if(money>=1) {
+						doc.getElementById("btn-C").classList.remove("disabledBtn");
+						doc.getElementById("btn-C").disabled = false;
+					}
+				}
+			}
+		}
+
+		//function for recording the name of product
+		let valueOfProduct = 0;
+		checkValueOfBtn.forEach(element => {
+			element.addEventListener("click", event => {
+				productName += event.target.id.split("-")[1];
+				if(!isNaN(event.target.id.split("-")[1])) {
+					typeNonNumber();
+				}else {
+					typeNumber()
+				}
+			})
+		})
+
+		//when the type is A or B or C
+		function typeNonNumber(){
+			removeDisabled(moneyCount);
+			doc.getElementById("productNum").classList.add("disabled")
+			input.push(productName);
+			console.log(`productName: ${productName}`)
+			productName = '';
+			doc.getElementById("totalProduct").innerHTML = input;
+			moneyCount -= +valueOfProduct;
+			moneyOrder += +valueOfProduct;
+			doc.getElementById("moneyCount").innerHTML = Math.fround(moneyCount).toFixed(2);
+			addDisabled(moneyCount)
+		}
+
+		//when the type is number
+		function typeNumber(){
+			doc.getElementById("productNum").classList.remove("disabled")
+			doc.getElementById("btn-A").classList.add("disabledBtn");
+			doc.getElementById("btn-B").classList.add("disabledBtn");
+			doc.getElementById("btn-C").classList.add("disabledBtn");
+			valueOfProduct = event.target.value
+			console.log(valueOfProduct)
+		}
+
+		//function for adding disabled
+		function addDisabled(money){
+			if(money<1) {
+				doc.getElementById("btn-C").classList.add("disabledBtn");
+				doc.getElementById("btn-C").disabled = true;
+				if(money<0.75) { 
+					doc.getElementById("btn-B").classList.add("disabledBtn");
+					doc.getElementById("btn-B").disabled = true;
+					if(money<0.50) {
+						doc.getElementById("btn-A").classList.add("disabledBtn");
+						doc.getElementById("btn-A").disabled = true;
+					}
+				}
+			}
+		}
+
+		//click orderBtn
+		doc.getElementById("orderBtn").addEventListener("click", () => {
+			if(input.length==0) alert("There is no order.")
+			else{
+				const len = input.length;
+				for(let i=0; i<len; i++) {
+					vend(input[i])
+				}
+			}
+		})
+
+		//click cancelBtn
+		doc.getElementById("cancelBtn").addEventListener("click", () => {
+			cancelFucn();
+		})
+
+		function cancelFucn() {
+			input = []
+			productName = ''
+			doc.getElementById("totalProduct").innerHTML = input;
+			moneyCount += +Math.fround(moneyOrder).toFixed(2);
+			doc.getElementById("moneyCount").innerHTML = moneyCount;
+			moneyOrder = 0.00;
+			removeDisabled(moneyCount);
+			doc.getElementById("productNum").classList.add("disabled")
+		}
+
+		//click returnCurrencyBtn
+		doc.getElementById("returnCurrencyBtn").addEventListener("click", () => {
+			if(!moneyCount) alert("There is no money.")
+			else returnCurrency(`$${Math.fround(moneyCount).toFixed(2)}`)
+		})
+
+	</script>
+
+
+</body>
+
+</html>
