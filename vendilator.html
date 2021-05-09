@@ -52,8 +52,6 @@
 			if(inputCall < inputs.length) {
 				let value = inputs[inputCall-1].value;
 				let type = inputs[inputCall-1].type;
-				console.log(`type: ${type}`)
-				console.log(`value: ${value}`)
 				if(type == 'coin') {
 					moneyCount += +value;
 					removeDisabled(moneyCount)
@@ -124,7 +122,6 @@
 			removeDisabled(moneyCount);
 			doc.getElementById("productNum").classList.add("disabled")
 			input.push(productName);
-			console.log(`productName: ${productName}`)
 			productName = '';
 			doc.getElementById("totalProduct").innerHTML = input;
 			moneyCount -= +valueOfProduct;
